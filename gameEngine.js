@@ -35,9 +35,12 @@ GE.gameEngine = function(canvas,_w,_h){
     for (var x = 0; x < 16; ++x){
       for (var y = 0; y < 16; ++y){
         this.ghe.setBlock(x, y,this.map[x][y].texture);
-        if(this.map[x][y].isOccupiedByEntity) this.ghe.setBlock(x, y,this.map[x][y].occupyingEntity.texture);
+        //if(this.map[x][y].isOccupiedByEntity) this.ghe.setBlock(x, y,this.map[x][y].occupyingEntity.texture);
       }
     }
+    this.entities.forEach(function(e){
+      thau.ghe.setBlock(e.x,e.y,e.texture);
+    });
   };
 
   this.setBlock = function(x,y,b){
@@ -50,13 +53,14 @@ GE.gameEngine = function(canvas,_w,_h){
   {
     var x = e.x;
     var y = e.y;
-    if(!this.map[x][y].isOccupiedByEntity)
-    {
-      this.map[x][y].isOccupiedByEntity = true;
-      this.map[x][y].occupyingEntity = e;
-      this.entities.push(e);
-      this.ghe.setBlock(x,y, e.texture);
-    }
+    //if(!this.map[x][y].isOccupiedByEntity)
+    //{
+    //  this.map[x][y].isOccupiedByEntity = true;
+    //  this.map[x][y].occupyingEntity = e;
+    //  this.entities.push(e);
+    //  this.ghe.setBlock(x,y, e.texture);
+    //}
+    this.entities.push(e);
   };
 
   this.updateEntities = function()
@@ -89,10 +93,10 @@ GE.gameEngine = function(canvas,_w,_h){
 GE.block = function(_texture, _type){
   this.hasPlayer = 0; //0 = false, 1 = bottom-half, 2 = top-half
   this.texture = _texture;
-  this.isOccupiedByEntity  = false;
+  //this.isOccupiedByEntity  = false;
   this.type = _type;
   this.isSolid = false;
-  this.occupyingEntity = null;
+  //this.occupyingEntity = null;
   this.onClick;
 };
 

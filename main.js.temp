@@ -5,8 +5,6 @@ var obsidianBlock;
 
 var chicken;
 
-var ftype = 0;
-
 window.onload = function(){
   //var ghe = new tdGE(document.getElementById('myCanvas'),500,500);
   //document.append(ge.getTexture("textures/grass.jpg"));
@@ -36,13 +34,12 @@ function ready(){
 
   chicken.update = function(game){
 
-    //if (Math.random()<0.01) { // allow charge flips
-    if (Math.random()<0) { // no charge flips
+    if (Math.random()<0.01) { // flip the friendliness
       this.friendly = !this.friendly;
       if (this.friendly) {
-        this.texture = game.textures[3];
+	this.texture = game.textures[3];
       } else {
-        this.texture = game.textures[4];
+	this.texture = game.textures[4];
       }
     }
 
@@ -52,18 +49,14 @@ function ready(){
     var x2 = this.x + 0.2*Math.cos(this.phi - dphi);
     var y2 = this.y + 0.2*Math.sin(this.phi - dphi);
     var s1 = 0, s2 = 0;
-    var me = this.friendly;
     game.entities.forEach(function(e){
-      if (me == e.friendly) {
-	s1 -= (x1-e.x)*(x1-e.x) + (y1-e.y)*(y1-e.y);
-	s2 -= (x2-e.x)*(x2-e.x) + (y2-e.y)*(y2-e.y);
-      } else {
-	s1 += (x1-e.x)*(x1-e.x) + (y1-e.y)*(y1-e.y);
-	s2 += (x2-e.x)*(x2-e.x) + (y2-e.y)*(y2-e.y);
-      }
+      s1 += (x1-e.x)*(x1-e.x) + (y1-e.y)*(y1-e.y);
+      s2 += (x2-e.x)*(x2-e.x) + (y2-e.y)*(y2-e.y);
     });
-    if (s1<s2) { // same charges repel, opposite charges attract
-    //if (s1>s2) { // same charges attract, opposite charges repel
+    var ch;
+    if (this.friendly) ch = s1<s2; // push chicken closer to each other
+    else ch = s1>s2; // push chicken away from each other
+    if (ch) {
       this.x = x1; this.y = y1; this.phi += dphi;
     } else {
       this.x = x2; this.y = y2; this.phi -= dphi;
@@ -100,8 +93,7 @@ function clickChicken(e){
     tchicken.x = c.x;
     tchicken.y = c.y;
     tchicken.phi = 2*Math.random()*Math.PI;
-    ////tchicken.friendly = Math.random()>0.5; // create charges randomly
-    tchicken.friendly = ftype==0; ftype = 1-ftype; // create charges like +-+-
+    tchicken.friendly = Math.random()>0.5;
     if(!tchicken.friendly) tchicken.texture=ge.textures[4];
     console.log(tchicken);
     ge.placeEntity(tchicken);
